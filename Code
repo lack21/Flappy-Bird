@@ -159,10 +159,12 @@ if __name__ == "__main__":
     jump = pygame.mixer.Sound("jump.wav")
     die = pygame.mixer.Sound("losing.wav")
     score_up = pygame.mixer.Sound("score_gaining.wav")
+    winning = pygame.mixer.Sound("TTT_win.wav")
 
 
     DONE = False
     OVER = True
+    WN = True
 
 
     running = True
@@ -220,6 +222,7 @@ if __name__ == "__main__":
 
                     OVER = True
                     DONE = False
+                    WN = True
 
         # Moving
         if not(DONE):
@@ -304,6 +307,15 @@ if __name__ == "__main__":
             if OVER:
                 die.play()
                 OVER = False
+
+
+        # Winning
+        if STAT.score == 100:
+            DONE = True
+
+            if WN:
+                winning.play()
+                WN = False
 
 
         # Animation
