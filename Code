@@ -1,0 +1,318 @@
+# lear
+# Flappy Bird
+
+# Welcome to the Flappy Bird
+# This game is made in pygame
+
+import pygame
+import random as rd
+
+if __name__ == "__main__":
+    pygame.init()
+
+    # Screen
+    WIDTH = 1200
+    HEIGHT = 800
+
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+
+    # Background
+    background_1 = pygame.image.load("flappy_bg_1.jpg")
+    background_2 = pygame.image.load("flappy_bg_2.jpg")
+
+    BK = True
+
+
+    # Title
+    pygame.display.set_caption("Flappy bird")
+
+
+    # Icon
+    icon = pygame.image.load("flappy.png")
+
+    pygame.display.set_icon(icon)
+
+
+    # Bird
+    class Bird:
+        def __init__(self, bird, bird_X, bird_Y):
+            self.bird = bird
+            self.bird_X = bird_X
+            self.bird_Y = bird_Y
+
+        def get_bird(self):
+            screen.blit(self.bird, (self.bird_X, self.bird_Y))
+
+    bird = pygame.image.load("flappy.png")
+    bird_x = 200
+    bird_y = 360
+
+    bird_movement = 0.6
+
+    CHICK = Bird(bird, bird_x, bird_y)
+
+
+    # Enemy
+    class Insects:
+        def __init__(self, eagle, eagle_X, eagle_Y, bee, bee_X, bee_Y, wasp, wasp_X, wasp_Y, bumblebee, bumblebee_X, bumblebee_Y, cricket, cricket_X, cricket_Y, humming_bird, humming_bird_X, humming_bird_Y):
+            self.eagle = eagle
+            self.eagle_X = eagle_X
+            self.eagle_Y = eagle_Y
+
+            self.bee = bee
+            self.bee_X = bee_X
+            self.bee_Y = bee_Y
+
+            self.wasp = wasp
+            self.wasp_X = wasp_X
+            self.wasp_Y = wasp_Y
+
+            self.bumblebee = bumblebee
+            self.bumblebee_X = bumblebee_X
+            self.bumblebee_Y = bumblebee_Y
+
+            self.cricket = cricket
+            self.cricket_X = cricket_X
+            self.cricket_Y = cricket_Y
+
+            self.humming_bird = humming_bird
+            self.humming_bird_X = humming_bird_X
+            self.humming_bird_Y = humming_bird_Y
+
+        def get_eagle(self):
+            screen.blit(self.eagle, (self.eagle_X, self.eagle_Y))
+
+        def get_bee(self):
+            screen.blit(self.bee, (self.bee_X, self.bee_Y))
+
+        def get_wasp(self):
+            screen.blit(self.wasp, (self.wasp_X, self.wasp_Y))
+
+        def get_bumblebee(self):
+            screen.blit(self.bumblebee, (self.bumblebee_X, self.bumblebee_Y))
+
+        def get_cricket(self):
+            screen.blit(self.cricket, (self.cricket_X, self.cricket_Y))
+
+        def get_humming_bird(self):
+            screen.blit(self.humming_bird, (self.humming_bird_X, self.humming_bird_Y))
+
+
+    eagle = pygame.image.load("eagle.png")
+    eagle_x = 1300
+    eagle_y = rd.randint(100, 700)
+    eagle_movement = -1.1
+
+    bee = pygame.image.load("bee.png")
+    bee_x = 1300
+    bee_y = rd.randint(100, 700)
+    bee_movement = -0.9
+
+    wasp = pygame.image.load("wasp.png")
+    wasp_x = 1300
+    wasp_y = rd.randint(100, 700)
+    wasp_movement = -1
+
+    bumblebee = pygame.image.load("bumblebee.png")
+    bumblebee_x = 1300
+    bumblebee_y = rd.randint(100, 700)
+    bumblebee_movement = -0.95
+
+    cricket = pygame.image.load("cricket.png")
+    cricket_x = 1300
+    cricket_y = rd.randint(100, 700)
+    cricket_movement = -0.85
+
+    humming_bird = pygame.image.load("humming_bird.png")
+    humming_bird_x = 1300
+    humming_bird_y = rd.randint(100, 700)
+    humming_bird_movement = -1.05
+
+    ENEMY = Insects(eagle, eagle_x, eagle_y, bee, bee_x, bee_y, wasp, wasp_x, wasp_y, bumblebee, bumblebee_x, bumblebee_y, cricket, cricket_x, cricket_y, humming_bird, humming_bird_x, humming_bird_y)
+
+
+    # Statistics
+    over_text = pygame.font.Font("freesansbold.ttf", 64)
+    score_text = pygame.font.Font("freesansbold.ttf", 52)
+
+    class Statistics:
+        def __init__(self, gameover, score):
+            self.gameover = gameover
+            self.score = score
+
+        def get_game_over(self):
+            text_over = over_text.render(self.gameover, True, (0, 0, 0))
+            screen.blit(text_over, (400, 330))
+
+        def get_score(self):
+            text_score = score_text.render(f"Score : {self.score}", True, (180, 120, 60))
+            screen.blit(text_score, (30, 30))
+
+    over = "Game Over!"
+    score = 0
+
+    STAT = Statistics(over, score)
+
+
+    # Sound
+    jump = pygame.mixer.Sound("jump.wav")
+    die = pygame.mixer.Sound("losing.wav")
+    score_up = pygame.mixer.Sound("score_gaining.wav")
+
+
+    DONE = False
+    OVER = True
+
+
+    running = True
+    while running:
+        if BK:
+            screen.blit(background_1, (-100, -160))
+
+        else:
+            screen.blit(background_2, (-100, -140))
+
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    BK = not(BK)
+
+                if event.key == pygame.K_SPACE and not(DONE):
+                    CHICK.bird_Y -= 80
+                    jump.play()
+
+                if event.key == pygame.K_r and DONE:
+                    CHICK.bird_X = 200
+                    CHICK.bird_Y = 360
+
+                    ENEMY.eagle_X = 1300
+                    ENEMY.eagle_Y = rd.randint(100, 700)
+
+                    ENEMY.bee_X = 1300
+                    ENEMY.bee_Y = rd.randint(100, 700)
+
+                    ENEMY.wasp_X = 1300
+                    ENEMY.wasp_Y = rd.randint(100, 700)
+
+                    ENEMY.bumblebee_X = 1300
+                    ENEMY.bumblebee_Y = rd.randint(100, 700)
+
+                    ENEMY.cricket_X = 1300
+                    ENEMY.cricket_Y = rd.randint(100, 700)
+
+                    ENEMY.humming_bird_X = 1300
+                    ENEMY.humming_bird_Y = rd.randint(100, 700)
+
+                    eagle_movement = -1.05
+                    bee_movement = -0.85
+                    wasp_movement = -0.95
+                    bumblebee_movement = -0.9
+                    cricket_movement = -0.8
+                    humming_bird_movement = -1
+                    bird_movement = 0.6
+
+                    STAT.score = 0
+
+                    OVER = True
+                    DONE = False
+
+        # Moving
+        if not(DONE):
+            CHICK.bird_Y += bird_movement
+            ENEMY.eagle_X += eagle_movement
+            ENEMY.bee_X += bee_movement
+            ENEMY.wasp_X += wasp_movement
+            ENEMY.bumblebee_X += bumblebee_movement
+
+        if STAT.score >= 20:
+            ENEMY.get_humming_bird()
+
+            if not(DONE):
+                ENEMY.humming_bird_X += humming_bird_movement
+
+        if STAT.score >= 50:
+            ENEMY.get_cricket()
+
+            if not(DONE):
+                ENEMY.cricket_X += cricket_movement
+
+
+        # Score Up
+        if ENEMY.eagle_X < -50:
+            ENEMY.eagle_X = 1300
+            ENEMY.eagle_Y = rd.randint(100, 700)
+
+            STAT.score += 1
+            score_up.play()
+
+        if ENEMY.bee_X < -50:
+            ENEMY.bee_X = 1300
+            ENEMY.bee_Y = rd.randint(100, 700)
+
+            STAT.score += 1
+            score_up.play()
+
+        if ENEMY.wasp_X < -50:
+            ENEMY.wasp_X = 1300
+            ENEMY.wasp_Y = rd.randint(100, 700)
+
+            STAT.score += 1
+            score_up.play()
+
+        if ENEMY.bumblebee_X < -50:
+            ENEMY.bumblebee_X = 1300
+            ENEMY.bumblebee_Y = rd.randint(100, 700)
+
+            STAT.score += 1
+            score_up.play()
+
+        if ENEMY.cricket_X <= -50:
+            ENEMY.cricket_X = 1300
+            ENEMY.cricket_Y = rd.randint(100, 700)
+ 
+            STAT.score += 1
+            score_up.play()
+
+        if ENEMY.humming_bird_X <= -50:
+            ENEMY.humming_bird_X = 1300
+            ENEMY.humming_bird_Y = rd.randint(100, 700)
+
+            STAT.score += 1
+            score_up.play()
+
+        
+        if STAT.score >= 80:
+            eagle_movement = -1.35
+            bee_movement = -1.15
+            wasp_movement = -1.25
+            bumblebee_movement = -1.2
+            cricket_movement = -1.1
+            humming_bird_movement = -1.3
+            bird_movement = 0.8
+
+
+        # Game Over
+        if CHICK.bird_Y < 0 or CHICK.bird_Y > 748 or CHICK.bird_Y - 20 < ENEMY.eagle_Y and CHICK.bird_Y + 46 > ENEMY.eagle_Y and CHICK.bird_X - 20 < ENEMY.eagle_X and CHICK.bird_X + 46 > ENEMY.eagle_X or CHICK.bird_Y - 20 < ENEMY.bee_Y and CHICK.bird_Y + 46 > ENEMY.bee_Y and CHICK.bird_X - 20 < ENEMY.bee_X and CHICK.bird_X + 46 > ENEMY.bee_X or CHICK.bird_Y - 20 < ENEMY.wasp_Y and CHICK.bird_Y + 46 > ENEMY.wasp_Y and CHICK.bird_X - 20 < ENEMY.wasp_X and CHICK.bird_X + 46 > ENEMY.wasp_X or CHICK.bird_Y - 20 < ENEMY.bumblebee_Y and CHICK.bird_Y + 46 > ENEMY.bumblebee_Y and CHICK.bird_X - 20 < ENEMY.bumblebee_X and CHICK.bird_X + 46 > ENEMY.bumblebee_X or STAT.score >= 20 and CHICK.bird_Y - 20 < ENEMY.humming_bird_Y and CHICK.bird_Y + 46 > ENEMY.humming_bird_Y and CHICK.bird_X - 20 < ENEMY.humming_bird_X and CHICK.bird_X + 46 > ENEMY.humming_bird_X or STAT.score >= 50 and CHICK.bird_Y - 20 < ENEMY.cricket_Y and CHICK.bird_Y + 46 > ENEMY.cricket_Y and CHICK.bird_X - 20 < ENEMY.cricket_X and CHICK.bird_X + 46 > ENEMY.cricket_X:
+            DONE = True
+            STAT.get_game_over()
+
+            if OVER:
+                die.play()
+                OVER = False
+
+
+        # Animation
+        ENEMY.get_eagle()
+        ENEMY.get_bee()
+        ENEMY.get_wasp()
+        ENEMY.get_bumblebee()
+
+        CHICK.get_bird()
+        STAT.get_score()
+
+        pygame.display.update()
